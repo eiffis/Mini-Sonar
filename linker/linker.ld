@@ -2,10 +2,10 @@ ENTRY(Reset_Handler)
 
 MEMORY
 {
-    flash(rx) :
+    FLASH(rx) :
         ORIGIN = 0x08000000,
         LENGTH = 2048K
-    sram1(rwx) :
+    SRAM1(rwx) :
         ORIGIN = 0x20000000,
         LENGTH = 192K
 }
@@ -13,26 +13,25 @@ MEMORY
 
 SECTIONS
 {
-    .isr_vector :
+    .isr_vector ORIGIN(FLASH):
     {
         KEEP(*(.isr_vector))
         KEEP(*(.isr_vector*))
-        . = ALIGN(4);
-    } > flash
+    } > FLASH
 
     .text :
     {
         *(.text)
         *(.text*)
         . = ALIGN(4);
-    } > flash
+    } > FLASH
 
     .rodata :
     {
         *(.rodata)
         *(.rodata*)
         . = ALIGN(4);
-    } > flash
+    } > FLASH
 
     .data : 
     {
@@ -40,7 +39,7 @@ SECTIONS
         *(.data)
         *(.data*)
         . = ALIGN(4);
-    } > sram1 AT> flash
+    } > SRAM1 AT> FLASH
 
     .bss :
     {
@@ -49,7 +48,7 @@ SECTIONS
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
-    } > sram1
+    } > SRAM1
 
     _sidata = LOADADDR(.data);
     _sdata = ADDR(.data);
@@ -58,5 +57,5 @@ SECTIONS
     _sbss = ADDR(.bss);
     _ebss = ADDR(.bss) + SIZEOF(.bss);
 
-    _estack = ORIGIN(sram1) + LENGTH(sram1);
+    _estack = ORIGIN(SRAM1) + LENGTH(SRAM1);
 }
