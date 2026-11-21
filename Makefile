@@ -2,14 +2,19 @@ CC = arm-none-eabi-gcc
 
 CPU = -mcpu=cortex-m4 -mthumb
 
-CFLAGS = $(CPU) -Wall -Wextra -O0 -g -ffreestanding
-
+CFLAGS = $(CPU) -Wall -Wextra -O0 -g -ffreestanding \
+				-IDrivers/CMSIS/Device/Include \
+        		-IDrivers/CMSIS/CMSIS_5/CMSIS/Core/Include \
+        		-Iinc \
+        		-DSTM32F429xx
+CFLAGS += -Iinclude
 
 LDFLAGS = -T linker/linker.ld -nostartfiles --specs=nosys.specs
 BUILD_DIR = build
 TARGET = $(BUILD_DIR)/sonar.elf
 
 SRC = src/main.c \
+	  src/servo.c \
 	  startup/startup_stm32F429I.s
 
 
