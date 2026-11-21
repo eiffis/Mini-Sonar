@@ -58,4 +58,6 @@ SECTIONS
     _ebss = ADDR(.bss) + SIZEOF(.bss);
 
     _estack = ORIGIN(SRAM1) + LENGTH(SRAM1);
+    end = _ebss;
+    _end = _ebss;
 }
