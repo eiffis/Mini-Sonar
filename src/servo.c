@@ -1,6 +1,5 @@
 #include "servo.h"
 #include "stm32f429xx.h"
-#include "stm32f4xx.h"
 
 void init_servo(void) {
   // Activation of GPIO port B and TIMER 4;
