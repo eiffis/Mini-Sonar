@@ -15,6 +15,7 @@ TARGET = $(BUILD_DIR)/sonar.elf
 
 SRC = src/main.c \
 	  src/servo.c \
+	  src/hcsr04.c \
 	  startup/startup_stm32F429I.s
 
 
