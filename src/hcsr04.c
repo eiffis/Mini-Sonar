@@ -4,7 +4,7 @@
 
 static void delay_us(uint32_t us) {
   uint32_t start = DWT->CYCCNT;
-  uint32_t cycles = us * 16U;
+  uint32_t cycles = us * (SystemCoreClock / 1000000U);
 
   while ((uint32_t)(DWT->CYCCNT - start) < cycles) {
   }
@@ -45,7 +45,7 @@ void hcsr04_init(void) {
   GPIOB->PUPDR &= ~(3U << (3U * 2U));
 
   TIM2->CR1 = 0U;
-  TIM2->PSC = 15U;
+  TIM2->PSC = 89U; // 90 MHz timer clock -> 1 MHz
   TIM2->ARR = 0xFFFFFFFFU;
   TIM2->CNT = 0U;
 

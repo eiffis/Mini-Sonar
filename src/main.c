@@ -1,11 +1,13 @@
+#include "display.h"
 #include "hcsr04.h"
 #include "servo.h"
-#include "stm32f429xx.h"
+#include "stm32f4xx_hal.h"
+#include "system_clock.h"
 #include <stdint.h>
 
 static void delay_us(uint32_t us) {
   uint32_t start = DWT->CYCCNT;
-  uint32_t cycles = us * 16U;
+  uint32_t cycles = us * (SystemCoreClock / 1000000U);
 
   while ((uint32_t)(DWT->CYCCNT - start) < cycles) {
   }
@@ -28,6 +30,10 @@ static inline void led_update(float distance_cm) {
 }
 
 int main(void) {
+  HAL_Init();
+  SystemClock_Config();
+  display_init();
+
   init_servo();
   hcsr04_init();
   led_init();

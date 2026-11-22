@@ -10,32 +10,32 @@ void init_servo(void) {
   (void)RCC->AHB1ENR;
   (void)RCC->APB1ENR;
 
-  // Configure PB6 in alternate function;
-  GPIOB->MODER &= ~(3U << 12);
-  GPIOB->MODER |= (2U << 12);
+  // Configure PB7 in alternate function (PB6 is used by the SDRAM);
+  GPIOB->MODER &= ~(3U << 14);
+  GPIOB->MODER |= (2U << 14);
 
   // Push pull;
-  GPIOB->OTYPER &= ~(1U << 6);
+  GPIOB->OTYPER &= ~(1U << 7);
 
   // no Pull Up / Pull down;
-  GPIOB->PUPDR &= ~(3U << 12);
+  GPIOB->PUPDR &= ~(3U << 14);
 
-  // Select TIM4_Channel 1
-  GPIOB->AFR[0] &= ~(0xFU << 24);
-  GPIOB->AFR[0] |= (2U << 24);
+  // Select TIM4_Channel 2
+  GPIOB->AFR[0] &= ~(0xFU << 28);
+  GPIOB->AFR[0] |= (2U << 28);
 
   TIM4->CR1 = 0;
-  TIM4->PSC = 15;
+  TIM4->PSC = 89; // 90 MHz timer clock -> 1 MHz
   TIM4->ARR = 19999;
-  TIM4->CCR1 = 1500;
+  TIM4->CCR2 = 1500;
 
-  // PWM mode 1, and preload of CR1 register;
+  // PWM mode 1, and preload of CCR2 register;
 
-  TIM4->CCMR1 &= ~((7U << 4) | (1U << 3));
-  TIM4->CCMR1 |= ((6U << 4) | (1U << 3));
+  TIM4->CCMR1 &= ~((7U << 12) | (1U << 11));
+  TIM4->CCMR1 |= ((6U << 12) | (1U << 11));
 
-  // Output of canal 1;
-  TIM4->CCER |= TIM_CCER_CC1E;
+  // Output of canal 2;
+  TIM4->CCER |= TIM_CCER_CC2E;
 
   // Preload of ARR;
   TIM4->CR1 |= TIM_CR1_ARPE;
@@ -59,6 +59,6 @@ void servo_set_us(uint16_t pulse_us) {
     pulse_us = 2000U;
   }
 
-  TIM4->CCR1 = pulse_us;
+  TIM4->CCR2 = pulse_us;
   return;
 }
