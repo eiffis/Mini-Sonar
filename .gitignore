@@ -1,0 +1,13 @@
+build/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+
+.cache/
+compile_commands.json
+*.bak
+*.swp
+*~

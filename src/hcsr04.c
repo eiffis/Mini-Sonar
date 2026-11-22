@@ -2,12 +2,6 @@
 #include "stm32f429xx.h"
 #include <stdint.h>
 
-static void delay(volatile uint32_t count) {
-  while (count > 0U) {
-    count--;
-  }
-}
-
 static void delay_us(uint32_t us) {
   uint32_t start = DWT->CYCCNT;
   uint32_t cycles = us * 16U;
