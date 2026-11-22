@@ -1,5 +1,6 @@
 #include "display.h"
 #include "hcsr04.h"
+#include "radar.h"
 #include "servo.h"
 #include "stm32f4xx_hal.h"
 #include "system_clock.h"
@@ -29,10 +30,21 @@ static inline void led_update(float distance_cm) {
   }
 }
 
+static void scan_step(uint16_t pulse_us) {
+  servo_set_us(pulse_us);
+  delay_us(60000U);
+
+  float distance_cm = hcsr04_measure_cm();
+
+  led_update(distance_cm);
+  radar_update(pulse_us, distance_cm);
+}
+
 int main(void) {
   HAL_Init();
   SystemClock_Config();
   display_init();
+  radar_init();
 
   init_servo();
   hcsr04_init();
@@ -40,17 +52,11 @@ int main(void) {
 
   while (1) {
     for (uint16_t i = 1000U; i <= 2000U; i += 10U) {
-      servo_set_us(i);
-      delay_us(60000U);
-      float distance_cm = hcsr04_measure_cm();
-      led_update(distance_cm);
+      scan_step(i);
     }
 
     for (uint16_t i = 2000U; i >= 1000U; i -= 10U) {
-      servo_set_us(i);
-      delay_us(60000U);
-      float distance_cm = hcsr04_measure_cm();
-      led_update(distance_cm);
+      scan_step(i);
     }
   }
 }
